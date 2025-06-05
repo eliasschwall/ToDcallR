@@ -17,6 +17,7 @@
 #' @param parameters A vector of parameters for ToDcall.
 #' @param proteome_normalized A boolean indicating if proteome data is normalized.
 #' @return An object of class ToDcall.
+#' @importClassesFrom DESeq2 DESeqDataSet
 #' @export
 initToDcall <- function(dataset_name, organism, transcript_data, proteome_data, transcript_meta_data, timepoints, proteome_normalized = T) {
 
