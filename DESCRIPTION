@@ -1,11 +1,16 @@
 Package: ToDcallR
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Calling and analyzing translation on demand candidates in proteomic and transcriptomic time courses.
 Version: 0.1.0
 Authors@R: c(
     person(
-      "Jane", "Doe",
-      email = "jane@example.com",
+      "Elias", "Schwall",
+      email = "schwall.elias@gmail.com",
+      role = c("aut", "cre")
+    ),
+    person(
+      "Luke", "Brandwood",
+      email = "lbrandw1@uni-koeln.de",
       role = c("aut", "cre")
     )
   )

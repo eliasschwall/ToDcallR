@@ -13,7 +13,6 @@
 #' timepoints <- c("0h", "1h", "6h", "12h", "24h", "36h", "48h", "72h")
 #' contrasts <- create_contrast_mapping(timepoints)
 #' print(contrasts)
-#' @export
 create_contrast_mapping <- function(timepoints) {
   # Initialize an empty list to store contrasts
   contrasts <- list()

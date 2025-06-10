@@ -17,7 +17,7 @@ test_that("initToDcall works", {
     tibble::column_to_rownames("sample")
 
 
-  ToDcall <- initToDcall(
+  ToDcall <- suppressWarnings(initToDcall(
     dataset_name = "Yang Data",
     organism = "Mouse",
     transcript_data = read_csv("tests/testthat/testdata/transcriptome.csv"),
@@ -25,7 +25,7 @@ test_that("initToDcall works", {
     proteome_normalized = T,
     timepoints = c("0h","1h","6h","12h","24h","36h","48h","72h"),
     transcript_meta_data = colData
-  )
+  ))
 
   expect_s4_class(ToDcall, "ToDcall")
 

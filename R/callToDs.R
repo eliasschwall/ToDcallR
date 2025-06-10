@@ -25,7 +25,7 @@ callToDs <- function(ToDcall, stable_transcript_range, ToD_threshold) {
       ToDcall@dds,
       contrast = contrasts[[comparison]],
       lfcThreshold = 1,
-      altHypothesis = "greaterAbs"
+      altHypothesis = "lessAbs"
       ) %>%
       as.data.frame() %>%
       tibble::rownames_to_column("ensembl_gene_id") %>%
@@ -56,7 +56,19 @@ callToDs <- function(ToDcall, stable_transcript_range, ToD_threshold) {
   })
 
   names(ToD_candidates) <- names(stable_genes)
+
+  # For these potential candidates we want to see if the trend of a translational increase is still observable in the next time point
+  for(comparison in 1:length(ToD_candidates)){
+    print(comparison)
+  }
+
+
   ToDcall@ToD_candidates <- ToD_candidates
+
+
+
+
+
 
   return(ToDcall)
 }

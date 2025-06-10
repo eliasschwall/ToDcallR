@@ -29,35 +29,33 @@ LFC_calc_between_timepoints <- function(data, timepoints, is_log_transformed = F
   # Initialize an empty data frame to store results
   lfc_results <- data.frame()
 
-  # Calculate LFC for each pair of time points
+  # Calculate LFC for each consecutive pair of time points
   for (i in 1:(length(timepoints) - 1)) {
-    for (j in (i + 1):length(timepoints)) {
-      tp1 <- timepoints[i]
-      tp2 <- timepoints[j]
+    tp1 <- timepoints[i]
+    tp2 <- timepoints[i + 1]
 
-      # Filter data for each time point
-      data_tp1 <- dplyr::filter(data_long, time == tp1)
-      data_tp2 <- dplyr::filter(data_long, time == tp2)
+    # Filter data for each time point
+    data_tp1 <- dplyr::filter(data_long, time == tp1)
+    data_tp2 <- dplyr::filter(data_long, time == tp2)
 
-      # Join data on gene_id and replicate
-      lfc_data <- dplyr::inner_join(data_tp1, data_tp2, by = c("gene_id", "replicate"), suffix = c(".tp1", ".tp2"))
+    # Join data on gene_id and replicate
+    lfc_data <- dplyr::inner_join(data_tp1, data_tp2, by = c("gene_id", "replicate"), suffix = c(".tp1", ".tp2"))
 
-      # Calculate LFC
-      if (is_log_transformed) {
-        lfc_data <- dplyr::mutate(lfc_data, LFC = expression.tp2 - expression.tp1)
-      } else {
-        lfc_data <- dplyr::mutate(lfc_data, LFC = log2(expression.tp2 + 0.0001) - log2(expression.tp1 + 0.0001))
-      }
-
-      # Add a column for the comparison
-      lfc_data <- dplyr::mutate(lfc_data, comparison = paste(tp2, tp1, sep = "_vs_"))
-
-      # Select relevant columns
-      lfc_data <- dplyr::select(lfc_data, gene_id, replicate, comparison, LFC)
-
-      # Append to results
-      lfc_results <- dplyr::bind_rows(lfc_results, lfc_data)
+    # Calculate LFC
+    if (is_log_transformed) {
+      lfc_data <- dplyr::mutate(lfc_data, LFC = expression.tp2 - expression.tp1)
+    } else {
+      lfc_data <- dplyr::mutate(lfc_data, LFC = log2(expression.tp2 + 0.0001) - log2(expression.tp1 + 0.0001))
     }
+
+    # Add a column for the comparison
+    lfc_data <- dplyr::mutate(lfc_data, comparison = paste(tp2, tp1, sep = "_vs_"))
+
+    # Select relevant columns
+    lfc_data <- dplyr::select(lfc_data, gene_id, replicate, comparison, LFC)
+
+    # Append to results
+    lfc_results <- dplyr::bind_rows(lfc_results, lfc_data)
   }
 
   return(lfc_results)

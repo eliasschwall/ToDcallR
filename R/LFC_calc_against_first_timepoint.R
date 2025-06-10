@@ -33,7 +33,7 @@ LFC_calc_against_first_timepoint <- function(data, timepoints, is_log_transforme
   tp1 <- timepoints[1]
 
   # Calculate LFC for each time point compared to the first time point
-  for (j in 2:length(timepoints)) {
+  for (j in 1:length(timepoints)) {
     tp2 <- timepoints[j]
 
     # Filter data for each time point
