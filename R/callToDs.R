@@ -1,6 +1,6 @@
-callToDs <- function(ToDcall, stable_transcript_range, ToD_threshold) {
+callToDs <- function(ToDcall, stable_transcript_range, ToD_threshold, ToD_filtering_next_time_point_range) {
 
-  ToDcall@ToDcall_parameters <- c(stable_transcript_range, ToD_threshold) %>% setNames(c("stable_transcript_range", "ToD_threshold"))
+  ToDcall@ToDcall_parameters <- c(stable_transcript_range, ToD_threshold, ToD_filtering_next_time_point_range) %>% setNames(c("stable_transcript_range", "ToD_threshold","ToD_filtering_next_time_point_range"))
 
   # get gene ids for background genes
   ensembl <- biomaRt::useMart("ensembl")
@@ -57,14 +57,42 @@ callToDs <- function(ToDcall, stable_transcript_range, ToD_threshold) {
 
   names(ToD_candidates) <- names(stable_genes)
 
-  # For these potential candidates we want to see if the trend of a translational increase is still observable in the next time point
-  for(comparison in 1:length(ToD_candidates)){
-    print(comparison)
-  }
+
+  ToD_candidates_filtered <- lapply(names(ToD_candidates), function(comp) {
+    # Get the index of the current comparison
+    current_index <- match(comp, names(ToD_candidates))
+
+    # If it's the last comparison, we cannot check the next time point
+    if (current_index == length(names(ToD_candidates))) {
+      return(ToD_candidates[[comp]])
+    }
+
+    # Get the next comparison
+    next_comp <- names(ToD_candidates)[current_index + 1]
+
+    # Determine the current and next comparison names in ToDcall@proteome_LFC_against_0
+    current_comp_mapped <- sub("h_vs_.*", "h_vs_0h", comp)
+    next_comp_mapped <- sub("h_vs_.*", "h_vs_0h", next_comp)
+
+    # Filter the current candidates
+    ToD_candidates[[comp]] %>%
+      dplyr::filter(mgi_symbol %in% ToDcall@proteome_LFC_against_0$gene_id) %>%
+      dplyr::rowwise() %>%
+      dplyr::mutate(
+        current_LFC = ToDcall@proteome_LFC_against_0 %>%
+          dplyr::filter(gene_id == mgi_symbol, comparison == current_comp_mapped) %>%
+          dplyr::pull(LFC) %>% first(),
+        next_LFC = ToDcall@proteome_LFC_against_0 %>%
+          dplyr::filter(gene_id == mgi_symbol, comparison == next_comp_mapped) %>%
+          dplyr::pull(LFC) %>% first()
+      ) %>%
+      dplyr::filter(next_LFC >= (1-ToD_filtering_next_time_point_range) * current_LFC)  # Allow up to 30% decrease
+  })
+  names(ToD_candidates_filtered) <- names(stable_genes)
 
 
   ToDcall@ToD_candidates <- ToD_candidates
-
+  ToDcall@ToD_candidates_filtered <- ToD_candidates_filtered
 
 
 

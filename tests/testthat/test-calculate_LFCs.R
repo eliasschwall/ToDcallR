@@ -27,7 +27,7 @@ test_that("calculate_LFCs works", {
     transcript_meta_data = colData
   )
 
-  ToDcall <- calculate_LFCs(ToDcall, proteome_log = T, transcriptome_log = F) %>% callToDs(.,1,1)
+  ToDcall <- calculate_LFCs(ToDcall, proteome_log = T, transcriptome_log = F) %>% callToDs(.,1,1,0.3)
 
   expect_true(dim(ToDcall@transcripts_LFC_between_timepoints)[1]==3134096)
   expect_true(dim(ToDcall@proteome_LFC_between_timepoints)[1]==258300)

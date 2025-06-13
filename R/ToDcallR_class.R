@@ -15,5 +15,6 @@ setClass("ToDcall", slots = c(
   proteome_LFC_against_0 = "data.frame",
   background_genes_IDs = "data.frame",
   ToDcall_parameters = "numeric",
-  ToD_candidates = "list"
+  ToD_candidates = "list",
+  ToD_candidates_filtered = "list"
 ))
