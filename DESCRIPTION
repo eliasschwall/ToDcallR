@@ -24,6 +24,9 @@ Suggests:
 Config/testthat/edition: 3
 Imports: 
     biomaRt,
+    clusterProfiler,
     DESeq2,
     dplyr,
+    msigdb,
+    msigdbr,
     tidyr

@@ -7,10 +7,14 @@ callToDs <- function(ToDcall, stable_transcript_range, ToD_threshold, ToD_filter
   mouse <- biomaRt::useDataset("mmusculus_gene_ensembl", mart = ensembl)
 
   # Query to get MGI symbols and Entrez IDs
-  ToDcall@background_genes_IDs <- biomaRt::getBM(attributes = c("ensembl_gene_id", "mgi_symbol", "entrezgene_id"),
+  transcirptomic_genes <- biomaRt::getBM(attributes = c("ensembl_gene_id", "mgi_symbol", "entrezgene_id"),
                             filters = "ensembl_gene_id",
                             values = ToDcall@transcript_counts_norm %>% rownames(),
                             mart = mouse)
+
+
+  ToDcall@background_genes_IDs <- transcirptomic_genes %>%
+    dplyr::filter(mgi_symbol %in% ToDcall@proteome_norm$gene_id)
 
   # define contrast to extract stable genes
   contrasts <- create_contrast_mapping(ToDcall@timepoints_to_compare)
@@ -81,10 +85,10 @@ callToDs <- function(ToDcall, stable_transcript_range, ToD_threshold, ToD_filter
       dplyr::mutate(
         current_LFC = ToDcall@proteome_LFC_against_0 %>%
           dplyr::filter(gene_id == mgi_symbol, comparison == current_comp_mapped) %>%
-          dplyr::pull(LFC) %>% first(),
+          dplyr::pull(LFC) %>% dplyr::first(),
         next_LFC = ToDcall@proteome_LFC_against_0 %>%
           dplyr::filter(gene_id == mgi_symbol, comparison == next_comp_mapped) %>%
-          dplyr::pull(LFC) %>% first()
+          dplyr::pull(LFC) %>% dplyr::first()
       ) %>%
       dplyr::filter(next_LFC >= (1-ToD_filtering_next_time_point_range) * current_LFC)  # Allow up to 30% decrease
   })
