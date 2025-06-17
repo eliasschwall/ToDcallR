@@ -27,6 +27,7 @@ Imports:
     clusterProfiler,
     DESeq2,
     dplyr,
+    ggplot2,
     msigdb,
     msigdbr,
     tidyr

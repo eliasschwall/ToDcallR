@@ -5,13 +5,14 @@ ORA <- function(ToDcall) {
 
   # run enrichment for each ToD time points for each gene set collection
   enrichments <- lapply(ToDcall@ToD_candidates_filtered, function(time_interval){
-    lapply(msigdb_collection, function(genesets){
+    time_interval_enrichment <- lapply(msigdb_collection, function(genesets){
       clusterProfiler::enricher(
         gene = time_interval$mgi_symbol,
         TERM2GENE = genesets %>% dplyr::select(gs_name, gene_symbol),
         universe = ToDcall@background_genes_IDs$mgi_symbol
       )
     })
+    Filter(Negate(is.null), time_interval_enrichment)
   })
 
   enrichment_plots <- lapply(names(enrichments), function(interval_name) {

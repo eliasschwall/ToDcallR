@@ -32,13 +32,14 @@ callToDs <- function(ToDcall, stable_transcript_range, ToD_threshold, ToD_filter
       altHypothesis = "lessAbs"
       ) %>%
       as.data.frame() %>%
+      dplyr::filter(padj<0.05) %>%
       tibble::rownames_to_column("ensembl_gene_id") %>%
       dplyr::left_join(ToDcall@background_genes_IDs, by = "ensembl_gene_id")
 
     # Filter for genes whose 95% confidence interval lies entirely within [stable_transcript_range]
     stable_genes[[comparison]] <- res_stable %>%
-      dplyr::filter((log2FoldChange - 1.96 * lfcSE) >= -stable_transcript_range,
-                    (log2FoldChange + 1.96 * lfcSE) <= stable_transcript_range)
+      dplyr::filter(log2FoldChange >= -stable_transcript_range,
+                    log2FoldChange <= stable_transcript_range)
 
     cat("Comparison:", comparison, "\n")
 
