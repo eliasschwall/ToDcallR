@@ -38,6 +38,10 @@ LFC_Ratio_plot <- function(ToDcall) {
       legend.position = "none"
     ) +
     ggplot2::scale_fill_brewer(palette = "Set3") +
-    ggplot2::scale_x_discrete(labels = function(x) gsub("_", " ", x))
+    ggplot2::scale_x_discrete(labels = function(x) {
+      x <- gsub("_", " ", x)  # Replace underscores with spaces
+      x <- sub("(\\d+h) vs (\\d+h)", "\\2 to \\1", x)  # Swap and replace
+      return(x)
+    })
 
 }

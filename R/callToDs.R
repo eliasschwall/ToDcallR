@@ -25,21 +25,16 @@ callToDs <- function(ToDcall, stable_transcript_range, ToD_threshold, ToD_filter
   for (comparison in names(contrasts)) {
     # Run DESeq2 results with a modified null hypothesis:
     # Testing if the true log₂FC is within ±1 (null hypothesis) versus outside that range.
-    res_stable <- DESeq2::results(
+    stable_genes[[comparison]] <- DESeq2::results(
       ToDcall@dds,
       contrast = contrasts[[comparison]],
-      lfcThreshold = 1,
+      lfcThreshold = stable_transcript_range,
       altHypothesis = "lessAbs"
       ) %>%
       as.data.frame() %>%
       dplyr::filter(padj<0.05) %>%
       tibble::rownames_to_column("ensembl_gene_id") %>%
       dplyr::left_join(ToDcall@background_genes_IDs, by = "ensembl_gene_id")
-
-    # Filter for genes whose 95% confidence interval lies entirely within [stable_transcript_range]
-    stable_genes[[comparison]] <- res_stable %>%
-      dplyr::filter(log2FoldChange >= -stable_transcript_range,
-                    log2FoldChange <= stable_transcript_range)
 
     cat("Comparison:", comparison, "\n")
 
@@ -55,7 +50,8 @@ callToDs <- function(ToDcall, stable_transcript_range, ToD_threshold, ToD_filter
     # Merge the data frames based on mgi_symbol and gene_id and filter for ToD candidates
     ToD_candidates <- merge(stable_transcripts, protein_LFC, by.x = "mgi_symbol", by.y = "gene_id", all = TRUE) %>%
       dplyr::mutate(diff = LFC - log2FoldChange) %>%
-      dplyr::filter(diff >= ToD_threshold)
+      dplyr::filter(diff >= ToD_threshold) %>%
+      dplyr::filter(!is.na(mgi_symbol))
 
     return(ToD_candidates)
   })
@@ -69,7 +65,7 @@ callToDs <- function(ToDcall, stable_transcript_range, ToD_threshold, ToD_filter
 
     # If it's the last comparison, we cannot check the next time point
     if (current_index == length(names(ToD_candidates))) {
-      return(ToD_candidates[[comp]])
+      return(NULL)
     }
 
     # Get the next comparison
@@ -97,7 +93,7 @@ callToDs <- function(ToDcall, stable_transcript_range, ToD_threshold, ToD_filter
 
 
   ToDcall@ToD_candidates <- ToD_candidates
-  ToDcall@ToD_candidates_filtered <- ToD_candidates_filtered
+  ToDcall@ToD_candidates_filtered <- ToD_candidates_filtered %>% Filter(Negate(is.null), .)
 
 
 

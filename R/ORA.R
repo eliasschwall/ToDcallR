@@ -1,4 +1,4 @@
-ORA <- function(ToDcall) {
+ORA <- function(ToDcall, pvalueCutoff = 0.05) {
 
   # list for all msigdb gene sets that could be relevant
   msigdb_collection <- get_msigdb_gene_sets(ToDcall@organism)
@@ -9,7 +9,8 @@ ORA <- function(ToDcall) {
       clusterProfiler::enricher(
         gene = time_interval$mgi_symbol,
         TERM2GENE = genesets %>% dplyr::select(gs_name, gene_symbol),
-        universe = ToDcall@background_genes_IDs$mgi_symbol
+        universe = ToDcall@background_genes_IDs$mgi_symbol,
+        pvalueCutoff = pvalueCutoff,
       )
     })
     Filter(Negate(is.null), time_interval_enrichment)
@@ -31,7 +32,8 @@ ORA <- function(ToDcall) {
             "\nTime Interval:", interval_name,
             "\nStable Transcript Range:", ToDcall@ToDcall_parameters[1],
             "\nToD Threshold:", ToDcall@ToDcall_parameters[2],
-            "\nToD filtering next time point range:", ToDcall@ToDcall_parameters[3]
+            "\nToD filtering next time point range:", ToDcall@ToDcall_parameters[3],
+            "\npvalueCutoff:", pvalueCutoff
                         ))
       } else {
         NULL  # Explicitly return NULL for clarity, but will be filtered out
@@ -48,5 +50,5 @@ ORA <- function(ToDcall) {
   # Assign names to the list of time intervals
   names(enrichment_plots) <- names(enrichments)
 
-  return(enrichment_plots)
+  return(list(enrichments = enrichments,enrichment_plots = enrichment_plots))
 }
