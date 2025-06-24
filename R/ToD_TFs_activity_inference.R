@@ -17,16 +17,11 @@ ToD_TFs_activity_inference <- function(ToDcall) {
 
   TFs_and_targets_network <- decoupleR::get_collectri(organism = organism)
 
-
-  # counts have ensembl ids but need symbols for decoupleR
-  ensembl <- biomaRt::useMart("ensembl")
-  mouse <- biomaRt::useDataset("mmusculus_gene_ensembl", mart = ensembl)
-
   # Query to get MGI symbols and Entrez IDs
   transcirptomic_genes <- biomaRt::getBM(attributes = c("ensembl_gene_id", "mgi_symbol"),
                                          filters = "ensembl_gene_id",
                                          values = ToDcall@transcript_counts_norm %>% rownames(),
-                                         mart = mouse)
+                                         mart = ToDcall@mart)
 
   counts <- ToDcall@transcript_counts_norm %>%
     tibble::rownames_to_column("ensembl_gene_id") %>%
@@ -55,14 +50,6 @@ ToD_TFs_activity_inference <- function(ToDcall) {
     tidyr::pivot_wider(id_cols = 'condition', names_from = 'source', values_from = 'score') %>%
     tibble::column_to_rownames('condition') %>%
     as.matrix()
-
-  # Get top tfs with more variable means across clusters
-  tfs <- sample_acts %>%
-    dplyr::group_by(source) %>%
-    dplyr::summarise(std = sd(score)) %>%
-    dplyr::arrange(-abs(std)) %>%
-    dplyr::slice_head(n = n_tfs) %>%  # Use slice_head for head(n_tfs)
-    dplyr::pull(source)
 
   sample_acts_mat <- sample_acts_mat %>% scale() # Scale per sample
 

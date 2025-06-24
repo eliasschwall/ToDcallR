@@ -3,14 +3,21 @@ callToDs <- function(ToDcall, stable_transcript_range, ToD_threshold, ToD_filter
   ToDcall@ToDcall_parameters <- c(stable_transcript_range, ToD_threshold, ToD_filtering_next_time_point_range) %>% setNames(c("stable_transcript_range", "ToD_threshold","ToD_filtering_next_time_point_range"))
 
   # get gene ids for background genes
-  ensembl <- biomaRt::useMart("ensembl")
-  mouse <- biomaRt::useDataset("mmusculus_gene_ensembl", mart = ensembl)
+  if (ToDcall@organism %in% c("Mouse", "mouse", "Mus Musculus", "mus musculus", "MM", "mm", "Mm")) {
+    mart <- biomaRt::useDataset("mmusculus_gene_ensembl", mart = biomaRt::useMart("ensembl"))
+  } else if (ToDcall@organism %in% c("Human", "human", "Homo sapiens", "homo sapiens", "HS", "hs", "Hs")) {
+    mart <- biomaRt::useDataset("hsapiens_gene_ensembl", mart = biomaRt::useMart("ensembl"))
+  } else {
+    stop("Invalid organism specified. Please specify 'Mouse' or 'Human'.")
+  }
+
+  ToDcall@mart <- mart
 
   # Query to get MGI symbols and Entrez IDs
   transcirptomic_genes <- biomaRt::getBM(attributes = c("ensembl_gene_id", "mgi_symbol", "entrezgene_id"),
                             filters = "ensembl_gene_id",
                             values = ToDcall@transcript_counts_norm %>% rownames(),
-                            mart = mouse)
+                            mart = mart)
 
 
   ToDcall@background_genes_IDs <- transcirptomic_genes %>%

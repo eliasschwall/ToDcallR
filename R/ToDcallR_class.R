@@ -1,4 +1,5 @@
 #' @importClassesFrom DESeq2 DESeqDataSet
+#' @importClassesFrom biomaRt Mart
 setClass("ToDcall", slots = c(
   dataset_name = "character",
   organism = "character",
@@ -9,6 +10,7 @@ setClass("ToDcall", slots = c(
   transcript_counts_norm = "data.frame",
   proteome_norm = "data.frame",
   dds = "DESeqDataSet",
+  mart = "Mart",
   transcripts_LFC_between_timepoints = "data.frame",
   proteome_LFC_between_timepoints = "data.frame",
   transcripts_LFC_against_0 = "data.frame",
@@ -16,5 +18,6 @@ setClass("ToDcall", slots = c(
   background_genes_IDs = "data.frame",
   ToDcall_parameters = "numeric",
   ToD_candidates = "list",
-  ToD_candidates_filtered = "list"
+  ToD_candidates_filtered = "list",
+  ToD_UTRs_analysis = "list"
 ))

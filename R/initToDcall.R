@@ -52,15 +52,6 @@ initToDcall <- function(dataset_name, organism, transcript_data, proteome_data, 
     proteome_norm <- data.frame() # Placeholder, as data is raw
   }
 
-  # we need a empty dds object for the ToD object
-  empty_dds <- DESeq2::DESeqDataSetFromMatrix(
-    countData = matrix(10, nrow = 5, ncol = 2),
-    colData = data.frame(
-      condition = factor(c("A", "B")) # Example conditions for the two samples
-    ),
-    design = ~ condition
-  )
-
   # Create the ToDcall object
   tod_call_object <- new("ToDcall",
                          dataset_name = dataset_name,
@@ -69,8 +60,7 @@ initToDcall <- function(dataset_name, organism, transcript_data, proteome_data, 
                          proteome_counts_raw = proteome_counts_raw,
                          transcript_meta_data = transcript_meta_data,
                          timepoints_to_compare = timepoints,
-                         proteome_norm = proteome_norm,
-                         dds = empty_dds
+                         proteome_norm = proteome_norm
   )
 
   return(tod_call_object)
