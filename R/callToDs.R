@@ -19,6 +19,8 @@ callToDs <- function(ToDcall, stable_transcript_range, ToD_threshold, ToD_filter
                             values = ToDcall@transcript_counts_norm %>% rownames(),
                             mart = mart)
 
+  SummarizedExperiment::rowData(ToDcall@dds)$mgi_symbol <- transcirptomic_genes$mgi_symbol[match(rownames(ToDcall@dds), transcirptomic_genes$ensembl_gene_id)]
+
 
   ToDcall@background_genes_IDs <- transcirptomic_genes %>%
     dplyr::filter(mgi_symbol %in% ToDcall@proteome_norm$gene_id)
@@ -41,7 +43,7 @@ callToDs <- function(ToDcall, stable_transcript_range, ToD_threshold, ToD_filter
       as.data.frame() %>%
       dplyr::filter(padj<0.05) %>%
       tibble::rownames_to_column("ensembl_gene_id") %>%
-      dplyr::left_join(ToDcall@background_genes_IDs, by = "ensembl_gene_id")
+      dplyr::left_join(transcirptomic_genes, by = "ensembl_gene_id")
 
     cat("Comparison:", comparison, "\n")
 

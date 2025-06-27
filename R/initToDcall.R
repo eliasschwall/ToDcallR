@@ -60,7 +60,9 @@ initToDcall <- function(dataset_name, organism, transcript_data, proteome_data, 
                          proteome_counts_raw = proteome_counts_raw,
                          transcript_meta_data = transcript_meta_data,
                          timepoints_to_compare = timepoints,
-                         proteome_norm = proteome_norm
+                         proteome_norm = proteome_norm,
+                         dds = new("DESeqDataSet"),
+                         mart = new("Mart")
   )
 
   return(tod_call_object)

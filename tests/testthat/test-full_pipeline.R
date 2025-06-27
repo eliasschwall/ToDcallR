@@ -27,9 +27,12 @@ ToDcall <- initToDcall(
 ToDcall <- calculate_LFCs(ToDcall, proteome_log = T, transcriptome_log = F)
 
 ToDcall_strict <- callToDs(ToDcall,stable_transcript_range = 1, ToD_threshold = 1, ToD_filtering_next_time_point_range = 0.3) %>%
-  UTR_
-ToDcall_loose <- callToDs(ToDcall,stable_transcript_range = 2, ToD_threshold = 1, ToD_filtering_next_time_point_range = 0.3)
+  UTR_analysis()
+ToDcall_loose <- callToDs(ToDcall,stable_transcript_range = 2, ToD_threshold = 1, ToD_filtering_next_time_point_range = 0.3) %>%
+  UTR_analysis()
 
+saveRDS(ToDcall_strict, file = "../../Desktop/ToDcall_yang_data_strict.rds")
+saveRDS(ToDcall_loose, file = "../../Desktop/ToDcall_yang_data_loose.rds")
 enrichments_strict <- ORA(ToDcall_strict, 0.1)
 enrichments_loose <- ORA(ToDcall_loose, 0.1)
 
