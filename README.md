@@ -5,10 +5,33 @@
 
 <!-- badges: start -->
 
-![image](%7Bhttps://img.shields.io/badge/R-276DC3?style=for-the-badge&logo=r&logoColor=white%7D)
+![R](https://img.shields.io/badge/R-276DC3?style=for-the-badge&logo=r&logoColor=white)
+![Project](https://img.shields.io/badge/Master--PhD-Thesis-blue)
+![Version](https://img.shields.io/badge/Version-0.1.0-red) [![License:
+MIT](https://cdn.prod.website-files.com/5e0f1144930a8bc8aace526c/65dd9eb5aaca434fac4f1c34_License-MIT-blue.svg)](/LICENSE)
 <!-- badges: end -->
 
-The goal of ToDcallR is to …
+ToDcallR is an R package developed to call Translation on Demand (ToD)
+candidate genes in coupled temporal bulk RNA-Seq and proteomics
+datasets. The functions of this package correspond to the developed
+workflow of one of the PhD projects from Luke Brandwood and my (Elias
+Schwall) Master Thesis project (Translation on Demand as a
+post-transcriptional regulation mechanism of embryonic stem cell
+differentiation).
+
+## Translation on Demand
+
+We define ToD as an increase in protein abundance due to enhanced
+translation, occurring without any changes in mRNA levels of the
+corresponding gene. In other words, ToD is a regulatory mechanism where
+translation efficiency is selectively increased for transcripts of
+specific genes. This upregulation allows for rapid adjustments in
+protein levels, supporting cellular responses that need immediate
+protein synthesis without requiring new mRNA transcription. Such
+translation-driven increases could be particularly useful in situations
+where quick adaptations are necessary, as it enables cells to respond to
+changes in the environment or developmental cues by rapidly elevating
+the protein output from existing mRNA pools.
 
 ## Installation
 
@@ -20,35 +43,19 @@ You can install the development version of ToDcallR from
 pak::pak("eliasschwall/ToDcallR")
 ```
 
-## Example
+## How to use ToDcallR
 
-This is a basic example which shows you how to solve a common problem:
+Before using ToDcallR you should make sure that your datasets fit the
+expected format:
+
+- The transcriptomic and proteomic dataset need to have or be restricted
+  to the same number of time points
+- The `column names` of the dataframes should be corresponding to the
+  time point in hours e.g.: `0h`,`0.5h`,`1h` etc.
+- If one or both datasets have replicates indicate them by `_rep1` etc.
+  e.g.: `0h_rep1`,`0h_rep2`,`0.5h_rep1`,`0.5h_rep2`
 
 ``` r
 library(ToDcallR)
 ## basic example code
 ```
-
-What is special about using `README.Rmd` instead of just `README.md`?
-You can include R chunks like so:
-
-``` r
-summary(cars)
-#>      speed           dist       
-#>  Min.   : 4.0   Min.   :  2.00  
-#>  1st Qu.:12.0   1st Qu.: 26.00  
-#>  Median :15.0   Median : 36.00  
-#>  Mean   :15.4   Mean   : 42.98  
-#>  3rd Qu.:19.0   3rd Qu.: 56.00  
-#>  Max.   :25.0   Max.   :120.00
-```
-
-You’ll still need to render `README.Rmd` regularly, to keep `README.md`
-up-to-date. `devtools::build_readme()` is handy for this.
-
-You can also embed plots, for example:
-
-<img src="man/figures/README-pressure-1.png" width="100%" />
-
-In that case, don’t forget to commit and push the resulting figure
-files, so they display on GitHub and CRAN.
