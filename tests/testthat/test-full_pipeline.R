@@ -61,3 +61,45 @@ ggplot2::ggsave(filename = "/Users/elias/Documents/ComputationalBiologyMaster/Ma
 
 
 TFs_mouse <- read.delim("tests/testthat/testdata/Mus_musculus_TF.txt")
+
+
+
+ntotalgenes <- 21529
+ntotalTFs <- nrow(TFs)
+nToDs <- 0
+nToDTFs <- 0
+
+for(time_interval in ToDcall_loose@ToD_candidates_filtered){
+  nToDs <- nToDs + nrow(time_interval)
+
+  nToDTFs <- nToDTFs+length(time_interval$mgi_symbol[time_interval$mgi_symbol %in% TFs$Symbol])
+}
+
+contingency_table <- matrix(c(nToDTFs, nToDs - nToDTFs,
+                              ntotalTFs - nToDTFs, ntotalgenes - ntotalTFs - (nToDs - nToDTFs)),
+                            nrow = 2, byrow = TRUE)
+
+# Perform Fisher's Exact Test
+test_result <- fisher.test(contingency_table)
+
+
+
+
+# do a supplemetary figure for gene overrepresentation
+g1 <- ORA$enrichment_plots$`6h_vs_1h`$`M5_GO:CC` + ggtitle("1h to 6h GO Cellular Components")
+g2 <- ORA$enrichment_plots$`6h_vs_1h`$`M2_CP:REACTOME` + ggtitle("1h to 6h Reactome")
+g3 <- ORA$enrichment_plots$`12h_vs_6h`$`M5_GO:CC` + ggtitle("6h to 12h GO Cellular Components")
+g4 <- ORA$enrichment_plots$`12h_vs_6h`$`M2_CP:REACTOME` + ggtitle("6h to 12h Reactome")
+
+
+sup_fig <- (g1 + g2) / (g3 + g4) + plot_annotation(tag_levels = "A")
+sup_fig
+
+ggsave(
+  filename = "/Users/elias/Documents/ComputationalBiologyMaster/Master_Thesis/figures/sub_figures/GO_Reactome_Terms_subfig.svg",
+  device = "svg",
+  plot =sup_fig,
+  width = 15,
+  height = 11
+  )
+

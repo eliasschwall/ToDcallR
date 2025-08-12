@@ -14,15 +14,15 @@ callToDs <- function(ToDcall, stable_transcript_range, ToD_threshold, ToD_filter
   ToDcall@mart <- mart
 
   # Query to get MGI symbols and Entrez IDs
-  transcirptomic_genes <- biomaRt::getBM(attributes = c("ensembl_gene_id", "mgi_symbol", "entrezgene_id"),
+  transcriptomic_genes <- biomaRt::getBM(attributes = c("ensembl_gene_id", "mgi_symbol", "entrezgene_id"),
                             filters = "ensembl_gene_id",
                             values = ToDcall@transcript_counts_norm %>% rownames(),
                             mart = mart)
 
-  SummarizedExperiment::rowData(ToDcall@dds)$mgi_symbol <- transcirptomic_genes$mgi_symbol[match(rownames(ToDcall@dds), transcirptomic_genes$ensembl_gene_id)]
+  SummarizedExperiment::rowData(ToDcall@dds)$mgi_symbol <- transcriptomic_genes$mgi_symbol[match(rownames(ToDcall@dds), transcriptomic_genes$ensembl_gene_id)]
 
 
-  ToDcall@background_genes_IDs <- transcirptomic_genes %>%
+  ToDcall@background_genes_IDs <- transcriptomic_genes %>%
     dplyr::filter(mgi_symbol %in% ToDcall@proteome_norm$gene_id)
 
   # define contrast to extract stable genes
@@ -43,7 +43,7 @@ callToDs <- function(ToDcall, stable_transcript_range, ToD_threshold, ToD_filter
       as.data.frame() %>%
       dplyr::filter(padj<0.05) %>%
       tibble::rownames_to_column("ensembl_gene_id") %>%
-      dplyr::left_join(transcirptomic_genes, by = "ensembl_gene_id")
+      dplyr::left_join(transcriptomic_genes, by = "ensembl_gene_id")
 
     cat("Comparison:", comparison, "\n")
 
@@ -103,10 +103,6 @@ callToDs <- function(ToDcall, stable_transcript_range, ToD_threshold, ToD_filter
 
   ToDcall@ToD_candidates <- ToD_candidates
   ToDcall@ToD_candidates_filtered <- ToD_candidates_filtered %>% Filter(Negate(is.null), .)
-
-
-
-
 
   return(ToDcall)
 }
