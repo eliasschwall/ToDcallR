@@ -14,10 +14,13 @@ MIT](https://cdn.prod.website-files.com/5e0f1144930a8bc8aace526c/65dd9eb5aaca434
 ToDcallR is an R package developed to call Translation on Demand (ToD)
 candidate genes in coupled temporal bulk RNA-Seq and proteomics
 datasets. The functions of this package correspond to the developed
-workflow of one of the PhD projects from Luke Brandwood and my (Elias
-Schwall) Master Thesis project (Translation on Demand as a
-post-transcriptional regulation mechanism of embryonic stem cell
-differentiation).
+workflow of one of Luke Brandwood’s PhD projects and my (Elias Schwall)
+Master Thesis project (Translation on Demand as a post-transcriptional
+regulation mechanism of embryonic stem cell differentiation) at the
+[Beyer
+Lab](https://www.cecad.uni-koeln.de/research/principal-investigators/full-members/andreas-beyer),
+[CECAD](https://www.cecad.uni-koeln.de/home), [University of
+Cologne](https://www.uni-koeln.de/en/).
 
 ## Translation on Demand
 
@@ -54,6 +57,11 @@ expected format:
   time point in hours e.g.: `0h`,`0.5h`,`1h` etc.
 - If one or both datasets have replicates indicate them by `_rep1` etc.
   e.g.: `0h_rep1`,`0h_rep2`,`0.5h_rep1`,`0.5h_rep2`
+
+``` gfm
+[!IMPORTANT]
+Some thoughts on normalization:
+```
 
 ``` r
 library(ToDcallR)
