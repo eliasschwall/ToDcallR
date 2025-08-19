@@ -46,8 +46,8 @@ Before using ToDcallR you should make sure that your datasets fit the expected f
 
 
 ```{=gfm}
-[!IMPORTANT]
-Some thoughts on normalization:
+> [!IMPORTANT]
+> Some thoughts on normalization:
 ```
 
 

@@ -58,8 +58,8 @@ expected format:
 - If one or both datasets have replicates indicate them by `_rep1` etc.
   e.g.: `0h_rep1`,`0h_rep2`,`0.5h_rep1`,`0.5h_rep2`
 
-[!IMPORTANT]
-Some thoughts on normalization:
+> [!IMPORTANT]
+> Some thoughts on normalization:
 
 ``` r
 library(ToDcallR)
