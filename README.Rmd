@@ -45,7 +45,7 @@ Before using ToDcallR you should make sure that your datasets fit the expected f
 * If one or both datasets have replicates indicate them by `_rep1` etc. e.g.: `0h_rep1`,`0h_rep2`,`0.5h_rep1`,`0.5h_rep2`
 
 
-```{gfm}
+```{=gfm}
 [!IMPORTANT]
 Some thoughts on normalization:
 ```
