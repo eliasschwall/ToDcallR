@@ -59,7 +59,7 @@ expected format:
   e.g.: `0h_rep1`,`0h_rep2`,`0.5h_rep1`,`0.5h_rep2`
 
 > [!IMPORTANT]
-> Some thoughts on normalization:
+> Some thoughts on normalization: Although ultimately the form of normalization is up to you and your specific data modality, on temporal RNA-Seq or proteomics data, it is recommended to use a method that leverages information from adjacent samples, like gaussian process regression (GPR) or LOESS. This is even more important if you have a low number of replicates. It is up to you to transform the data into a form that lets you derive meaningful conclusions. All ToDCallR does is compare log fold change (LFC) values to infer how protein abundance changes in relation to transcript abundance changes for a particular gene.
 
 ``` r
 library(ToDcallR)
